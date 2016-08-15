@@ -21,83 +21,53 @@ const char charTable[256] = {
 	0x61,0xB2,0xB3,0xB4,0xE3,0x65,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0x6F,0xBE,
 0x70,0x63,0xBF,0x79,0xE4,0x78,0xE5,0xC0,0xC1,0xE6,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7};
 
-void _lcd_write(char rs, unsigned char byte, char repeatfirst)
+
+void _lcd_write(char rs, unsigned char byte)
 {
 	setbit(DDRB,2,1);setbit(PORTB,2,rs);//rs 0-instr 1-data
+	setbit(DDRB,1,1);setbit(PORTB,1,0);//rw 0-write 1-read
 	setbit(DDRB,0,1);setbit(PORTB,0,0);//e
 	
-	setbit(DDRD,7,1);setbit(PORTD,7,byte&128);//d7
+	setbit(DDRD,7,1);setbit(PORTD,7,byte&128);
 	setbit(DDRD,6,1);setbit(PORTD,6,byte&64);
 	setbit(DDRD,5,1);setbit(PORTD,5,byte&32);
 	setbit(DDRD,4,1);setbit(PORTD,4,byte&16);
+	setbit(DDRD,3,1);setbit(PORTD,3,byte&8);
+	setbit(DDRD,2,1);setbit(PORTD,2,byte&4);
+	setbit(DDRC,3,1);setbit(PORTC,3,byte&2);
+	setbit(DDRC,2,1);setbit(PORTC,2,byte&1);
 	
 	_delay_us(LCD_DELAY_PULSE);
 	setbit(PORTB,0,1);//e
 	_delay_us(LCD_DELAY_PULSE);
 	setbit(PORTB,0,0);//e
-	_delay_us(LCD_DELAY_PULSE);
-	
-	if (repeatfirst)
-	{
-		setbit(DDRD,7,1);setbit(PORTD,7,byte&128);//d7
-		setbit(DDRD,6,1);setbit(PORTD,6,byte&64);
-		setbit(DDRD,5,1);setbit(PORTD,5,byte&32);
-		setbit(DDRD,4,1);setbit(PORTD,4,byte&16);
-	
-		_delay_us(LCD_DELAY_PULSE);
-		setbit(PORTB,0,1);//e
-		_delay_us(LCD_DELAY_PULSE);
-		setbit(PORTB,0,0);//e
-		_delay_us(LCD_DELAY_PULSE);
-	}
-		
-		setbit(DDRD,7,1);setbit(PORTD,7,byte&8);//d3
-		setbit(DDRD,6,1);setbit(PORTD,6,byte&4);
-		setbit(DDRD,5,1);setbit(PORTD,5,byte&2);
-		setbit(DDRD,4,1);setbit(PORTD,4,byte&1);
-	
-	_delay_us(LCD_DELAY_PULSE);
-	setbit(PORTB,0,1);//e
-	_delay_us(LCD_DELAY_PULSE);
-	setbit(PORTB,0,0);//e
-	_delay_us(LCD_DELAY_PULSE);
 	
 	_delay_us(LCD_DELAY_SYMBOLS);
 }
 
 void lcd_setup()
 {
-	//_lcd_write(0,0b00001000,0);
-
-	//0 0 1 0 0 0 1 0 N F x x
-	_lcd_write(0,0b00101000,1);_delay_us(LCD_DELAY_INIT);
-	//0 0 0 0 1 D C B on off
-	_lcd_write(0,0b00001100,0);_delay_us(LCD_DELAY_INIT);	
-	//0 0 0 0 0 0 0 1 clear
-	_lcd_write(0,0b00000001,0);_delay_us(LCD_DELAY_INIT);	
-	//0 0 0 0 0
-	_lcd_write(0,0b00000010,0);_delay_us(LCD_DELAY_INIT);	
-	//0 0 0 0 0 1 i/d s/h
-	_lcd_write(0,0b00000110,0);_delay_us(LCD_DELAY_INIT);
-//_delay_ms(1000);
+	//0 0 1 1 N F FT1 FT0
+	//_lcd_write(0,0b00111100);_delay_us(LCD_DELAY_INIT);
+	_lcd_write(0,0b00111010);_delay_us(LCD_DELAY_INIT);
+	//0 0 0 0 1 D C B
+	_lcd_write(0,0b00001100);_delay_us(LCD_DELAY_INIT);
+	_lcd_write(0,0b00000001);_delay_us(LCD_DELAY_INIT);
+	_lcd_write(0,0b00000010);_delay_us(LCD_DELAY_INIT);
+	_lcd_write(0,0b00000110);_delay_us(LCD_DELAY_INIT);
 }
 
 void lcd_init()
 {
-	setbit(DDRB,1,1);setbit(PORTB,1,0);
-	_delay_ms(150);
+	_delay_ms(500);
 	lcd_setup();
 }
 
 void lcd_writebuffer()
 {
-	//0 0 0 0 0 0 0 1 clear
-	_lcd_write(0,0b00000001,0);_delay_us(LCD_DELAY_INIT);
-	//0 0 0 0 0
-	_lcd_write(0,0b00000010,0);_delay_us(LCD_DELAY_INIT);
+	lcd_setup();
+	for (int i=0; i<LCD_LINE_LENGTH; i++) _lcd_write(1,charTable[lcd_line_1[i]]);
 	
-	for (int i=0; i<LCD_LINE_LENGTH; i++) _lcd_write(1,charTable[lcd_line_1[i]],0);
-	
-	_lcd_write(0,0b11000000,0);
-	for (int i=0; i<LCD_LINE_LENGTH; i++) _lcd_write(1,charTable[lcd_line_2[i]],0);
+	_lcd_write(0,0b11000000);
+	for (int i=0; i<LCD_LINE_LENGTH; i++) _lcd_write(1,charTable[lcd_line_2[i]]);
 }
