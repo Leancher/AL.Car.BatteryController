@@ -12,6 +12,7 @@
 #include "libs/bwl_adc.h"
 #include "libs/bwl_uart.h"
 #include "libs/bwl_strings.h"
+#include "libs/ds18b20_avr.h"
 //#include "libs/bwl_simplserial.h"
 
 #define ADC_VOLT_MULTIPLIER_MV		(68+2.2)/2.2 * 1.1
@@ -81,8 +82,11 @@ int main(void)
     while (1) 
     {	
 		string_clear();
+		string_add_string("ACC = ");
 		string_add_int(get_acc_voltage());
 		string_add_crlf();
+		string_add_string("Temp = ");
+		//string_add_float(ds18b20_get_temperature_float(),1);
 		uart_send_string(1,string_buffer);
 		_delay_ms(1000);
 		wdt_reset();		
