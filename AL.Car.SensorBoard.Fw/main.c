@@ -11,6 +11,7 @@
 //#include "libs/dht22.h"
 #include "libs/bwl_adc.h"
 #include "libs/bwl_uart.h"
+#include "libs/bwl_strings.h"
 //#include "libs/bwl_simplserial.h"
 
 #define ADC_VOLT_MULTIPLIER_MV		(68+2.2)/2.2 * 1.1
@@ -66,22 +67,24 @@ int get_acc_voltage()
 
 int main(void)
 {
-	wdt_enable(WDTO_4S);	
+	wdt_enable(WDTO_8S);	
 
 	uart_init_withdivider(1,UBRR_VALUE);
-	uart_send_string(UART_DISPLAY,"Car sensor board");
-	_delay_ms(100);
-	uart_send_string(1,"^R");
-	_delay_ms(100);
-	uart_send_int(1,get_acc_voltage());
-	uart_send_string(1,"\r\n");
+	_delay_ms(1500);
+	string_clear();
+	string_add_string("Car sensor board");
+	string_add_crlf();
+	uart_send_string(1,string_buffer);
+	_delay_ms(1000);
 
-	//sserial_find_bootloader();
-	//sserial_set_devname(DEV_NAME);
+	
     while (1) 
     {	
-		//sserial_poll_uart(UART_USB);
-
+		string_clear();
+		string_add_int(get_acc_voltage());
+		string_add_crlf();
+		uart_send_string(1,string_buffer);
+		_delay_ms(1000);
 		wdt_reset();		
     }
 }

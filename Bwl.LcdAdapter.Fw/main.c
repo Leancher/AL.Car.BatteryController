@@ -51,8 +51,8 @@ int main()
 				
 				for(int i=0; i<LCD_LINE_LENGTH; i++)
 				{
-					lcd_line_2[i]=uart_receive_buffer_0[i];
-					lcd_line_1[i]=uart_receive_buffer_0[LCD_LINE_LENGTH+i];
+					lcd_line_1[i]=uart_receive_buffer_0[i];
+					lcd_line_2[i]=uart_receive_buffer_0[LCD_LINE_LENGTH+i];
 				}
 			}
 			lcd_writebuffer();
