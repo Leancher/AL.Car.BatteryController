@@ -93,6 +93,12 @@ void uart_send_int(unsigned char port,int val)
 	uart_send_string(port,uart_send_buffer);
 }
 
+void uart_send_float(unsigned char port,float val, char precision)
+{
+	dtostrf(val,1,precision,uart_send_buffer);
+	uart_send_string(port,uart_send_buffer);
+}
+
 void uart_send_line(unsigned char port,char *string)
 {
 	uart_send_string(port,string);

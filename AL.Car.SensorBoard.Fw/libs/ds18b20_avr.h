@@ -22,7 +22,7 @@ float ds18b20_get_temperature_float_async();
 
 //требует реализации функций
 //установить пин, к которому подключен датчик, в режим mode (1-выход, 0-вход), и в состояние state.
-void set_ow_pin(byte mode, byte state);
+void set_ow_pin(byte mod, byte state);
 //считать значение пина, к которому подключен датчик
 unsigned char get_ow_pin();
 

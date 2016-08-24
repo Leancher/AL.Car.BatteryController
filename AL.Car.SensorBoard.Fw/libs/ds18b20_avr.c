@@ -15,6 +15,19 @@
 
 typedef unsigned char byte;
 
+#define TEMP_SENSOR_PIN 1
+void set_ow_pin(byte mod, byte state)
+{
+	if (mod){DDRC|=1<<TEMP_SENSOR_PIN;	}else{DDRC&=(~(1<<TEMP_SENSOR_PIN));}
+	if (state){PORTC|=1<<TEMP_SENSOR_PIN;	}else{PORTC&=(~(1<<TEMP_SENSOR_PIN));}
+	
+}
+
+unsigned char get_ow_pin()
+{
+	return ((PINC&(1<<TEMP_SENSOR_PIN)));
+}
+
 // сброс датчика
 uint8_t sensor_reset()
 {
@@ -147,7 +160,7 @@ float ds18b20_get_temperature_float()
 	temp_data[0]=ds18b20_read_byte();
 	//Старший байт: 7-6-5-4-3-2-1-0. С 2 по 0 целое значение, старшие биты, с 8 по 3 - знак
 	temp_data[1]=ds18b20_read_byte();
-	sensor_reset();
+	//sensor_reset();
 	
 	result = (temp_data[1] << 8) | temp_data[0];
 

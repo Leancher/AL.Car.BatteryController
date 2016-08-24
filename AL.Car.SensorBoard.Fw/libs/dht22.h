@@ -3,11 +3,11 @@
 
 #include <inttypes.h>
 
-#define THERM_PIN PINA
-#define THERM_DDR DDRA
-#define THERM_PORT PORTA
+#define THERM_PIN PINC
+#define THERM_DDR DDRC
+#define THERM_PORT PORTC
 
-#define THERM_DQ PA1
+#define THERM_DQ PC0
 /* Utils */
 #define THERM_INPUT_MODE() THERM_DDR&=~(1<<THERM_DQ)
 #define THERM_OUTPUT_MODE() THERM_DDR|=(1<<THERM_DQ)

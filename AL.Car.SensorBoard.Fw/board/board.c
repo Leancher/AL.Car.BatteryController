@@ -5,15 +5,34 @@ void var_delay_ms(int ms)
 	for (int i=0; i<ms; i++)_delay_ms(1.0);
 }
 
-#define TEMP_SENSOR_PIN 1
-void set_ow_pin(byte mode, byte state)
+//Кнопка поддержки питания активация
+void button_power_supply_enable()
 {
-	if (state){PORTC|=1<<TEMP_SENSOR_PIN;	}else{PORTC&=(~(1<<TEMP_SENSOR_PIN));}
-	if (mode){DDRC|=1<<TEMP_SENSOR_PIN;	}else{DDRC&=(~(1<<TEMP_SENSOR_PIN));}
+	setbit(DDRB,7,0);
+	setbit(PORTB,7,1);
 }
 
-unsigned char get_ow_pin()
+//Кнопка поддержки питания - получение состояния
+byte button_power_supply_is_pressed()
 {
-	return ((PINC&(1<<TEMP_SENSOR_PIN)));
+	if (getbit(PINB,7)) {return 0;}
+	return 1;
 }
 
+void relay_power_supply_set(byte _state)
+{
+	setbit(DDRD,5,1);
+	setbit(PORTD,5,_state);
+}
+
+void alarm_activate_in_enable()
+{
+	setbit(DDRB,2,0);
+	setbit(PORTB,2,1);
+}
+
+byte alarm_activate_in_is_pressed()
+{
+	if (getbit(PINB,2)) {return 0;}
+	return 1;	
+} 

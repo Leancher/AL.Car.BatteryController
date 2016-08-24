@@ -14,6 +14,19 @@ char string_buffer[STRING_BUFFER_SIZE]={};
 char string_process_buffer[16]={};
 int string_buffer_pos=0;
 
+void move_to_new_string()
+{
+	while (string_length()<16)
+	{
+		string_add_string(" ");
+	}
+}
+
+int string_length()
+{
+	return string_buffer_pos;
+}
+
 void string_clear()
 {
 	for (int i=0; i<STRING_BUFFER_SIZE; i++) string_buffer[i]=0;

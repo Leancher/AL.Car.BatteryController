@@ -18,6 +18,8 @@ void string_add_char(char);
 void string_add_int(int val);
 void string_add_float(float val,char precision);
 void string_add_crlf();
+int string_length();
+void move_to_new_string();
 char string_buffer[STRING_BUFFER_SIZE];
 
 /* Example

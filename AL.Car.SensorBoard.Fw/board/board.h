@@ -20,5 +20,10 @@
 typedef unsigned char byte;
 
 void var_delay_ms(int ms);
+void button_power_supply_enable();
+byte button_power_supply_is_pressed();
+void relay_power_supply_set(byte _state);
+void alarm_activate_in_enable();
+byte alarm_activate_in_is_pressed();
 
 #endif /* BOARD_H_ */
