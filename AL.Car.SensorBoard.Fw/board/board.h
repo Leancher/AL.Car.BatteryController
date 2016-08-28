@@ -25,5 +25,9 @@ byte button_power_supply_is_pressed();
 void relay_power_supply_set(byte _state);
 void alarm_activate_in_enable();
 byte alarm_activate_in_is_pressed();
+void button_heat_glass_enable();
+byte button_heat_glass_is_pressed();
+void relay_heat_glass_state(byte state);
+void indicator_heat_glass (byte state);
 
 #endif /* BOARD_H_ */

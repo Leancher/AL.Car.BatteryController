@@ -27,9 +27,6 @@ typedef enum
   DHT_ERROR_TOOQUICK
 } DHT22_ERROR_t;
 
-
-    int dht22_read(float *temperature, float *humidity);
-
-
+int dht22_read(float *temperature, float *humidity);
 
 #endif /*_DHT22_H_*/

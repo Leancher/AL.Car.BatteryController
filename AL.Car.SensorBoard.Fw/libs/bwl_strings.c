@@ -14,7 +14,7 @@ char string_buffer[STRING_BUFFER_SIZE]={};
 char string_process_buffer[16]={};
 int string_buffer_pos=0;
 
-void move_to_new_string()
+void string_move_to_new()
 {
 	while (string_length()<16)
 	{

@@ -19,6 +19,29 @@ byte button_power_supply_is_pressed()
 	return 1;
 }
 
+void button_heat_glass_enable()
+{
+	setbit(DDRB,4,0);
+	setbit(PORTB,4,1);	
+}
+
+byte button_heat_glass_is_pressed()
+{
+	if (getbit(PINB,4)) {return 0;}
+	return 1;	
+}
+
+void relay_heat_glass_state(byte _state)
+{
+	setbit(DDRD,4,1);
+	setbit(PORTD,4,_state);
+}
+
+void indicator_heat_glass (byte state)
+{
+	
+}
+
 void relay_power_supply_set(byte _state)
 {
 	setbit(DDRD,5,1);
