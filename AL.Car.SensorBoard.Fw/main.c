@@ -56,32 +56,32 @@ int get_state_heat_glass_button()
 	return 2;
 }
 
-void set_state_heat_glass()
-{
-	static int _counter_work = 0;
-
-	if (button_heat_glass_is_pressed()==1)
-	{
-		if (_state_heat==0)
-		{
-			_state_heat=1;
-			switch_state_heat_glass(1);
-		}
-		else
-		{
-			_state_heat=0;
-			switch_state_heat_glass(0);
-		}
-		_counter_work=0;
-	}
-	if (_state_heat==1) _counter_work++;
-	if (_counter_work>200)
-	{
-		_state_heat=0;
-		_counter_work=0;
-		switch_state_heat_glass(0);
-	}
-}
+// void set_state_heat_glass()
+// {
+// 	static int _counter_work = 0;
+// 
+// 	if (button_heat_glass_is_pressed()==1)
+// 	{
+// 		if (_state_heat==0)
+// 		{
+// 			_state_heat=1;
+// 			switch_state_heat_glass(1);
+// 		}
+// 		else
+// 		{
+// 			_state_heat=0;
+// 			switch_state_heat_glass(0);
+// 		}
+// 		_counter_work=0;
+// 	}
+// 	if (_state_heat==1) _counter_work++;
+// 	if (_counter_work>200)
+// 	{
+// 		_state_heat=0;
+// 		_counter_work=0;
+// 		switch_state_heat_glass(0);
+// 	}
+// }
 
 void set_current_state()
 {
@@ -90,17 +90,14 @@ void set_current_state()
 	if (_voltage_battery > VOLTAGE_ENGINE_RUNNING)
 	{
 		relay_power_supply_set(1);
-		set_state_heat_glass();
 		_counter_work=1;
-		return;
 	}
+
+	show_all_data_on_display(20);
 	_counter_work++;
 	//Задержка для исключений временного изменения напряженя
 	if (_counter_work < 5) return;
 
-	_state_heat=0;
-	switch_state_heat_glass(0);
-	
 	if (_counter_work>DURATION_WORK)
 	{
 		relay_power_supply_set(0);
@@ -111,7 +108,7 @@ void set_current_state()
 		show_data_on_display("Battery low charge");
 		relay_power_supply_set(0);
 		_counter_work=0;
-	}
+	}	
 	if (button_power_supply_is_pressed()==1)
 	{
 		relay_power_supply_set(0);
@@ -125,13 +122,11 @@ int main(void)
 	power_unit_enable();
 
 	button_power_supply_enable();
-	button_heat_glass_enable();
+	//button_heat_glass_enable();
 
     while (1) 
     {
 		set_current_state();
-
-		show_all_data_on_display(10);
 		_delay_ms(100);
     }
 }
