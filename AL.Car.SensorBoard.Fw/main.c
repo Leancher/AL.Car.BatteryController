@@ -12,7 +12,7 @@
 
 #define DEV_NAME "Car sensor board 1.0"
 
-#define DURATION_WORK 100
+#define DURATION_WORK 200
 
 #define VOLTAGE_ENGINE_RUNNING 13.5
 #define VOLTAGE_BATTERY_NORMAL_CHARGE 12.5
@@ -77,7 +77,8 @@ int _counter_work = 0;
 void set_current_state()
 {
 	static int _low_power = 0;
-	char *_data_display;
+	char *_data_display="";
+	static char *_previouse_data_display="";
 	float _voltage_battery = 0;
 	_voltage_battery = get_battery_voltage();
 	
@@ -108,15 +109,15 @@ void set_current_state()
 			_counter_work=0;			
 		}
 	}	
-	if (button_power_supply_is_pressed()==1)
-	{
-		relay_power_supply_set(0);
-		_counter_work=0;
-	}
+	if (button_power_supply_is_pressed()==1) relay_power_supply_set(0);
 	
-	if (_data_display > 0)
+	if (button_car_alarm_is_pressed()==1) relay_power_supply_set(0);
+
+	if (_data_display != "")
 	{
+		if (_data_display == _previouse_data_display) return;
 		show_data_on_display(_data_display);
+		_previouse_data_display=_data_display;
 	}
 	else
 	{
@@ -131,6 +132,7 @@ int main(void)
 	show_data_on_display(DEV_NAME);
 	
 	button_power_supply_enable();
+	button_car_alarm_enable();
 
     while (1) 
     {

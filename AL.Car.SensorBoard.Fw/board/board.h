@@ -30,4 +30,7 @@ byte button_heat_glass_is_pressed();
 void relay_heat_glass_state(byte state);
 void indicator_heat_glass (byte state);
 
+void button_car_alarm_enable();
+byte button_car_alarm_is_pressed();
+
 #endif /* BOARD_H_ */
