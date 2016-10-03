@@ -14,6 +14,21 @@ void show_data_on_display(char *data)
 	_delay_ms(1000);
 }
 
+void show_p_sensor_on_display(int _duration)
+{
+	static int index=0;
+	if (index==0)
+	{
+		string_clear(); //Передает битовый ноль, которые не кодирует символы
+		string_add_string("Voltage p-sensor = ");
+		string_add_float(get_photo_sensor_voltage(),2);
+		string_add_string("\r"); //Символ означает, что строка закончилась
+		uart_send_string(1,string_buffer);
+	}
+	index++;
+	if (index > _duration) index=0;
+}
+
 void show_voltage_on_display(int _duration)
 {
 	static int index=0;
@@ -75,10 +90,16 @@ void show_all_data_on_display(int _duration)
 			string_add_float(_climate_humidity_0,1);
 			string_move_to_new();
 		}
+		if (_mode==2)
+		{
+			string_add_string("Photosensor = ");
+			string_add_float(get_photo_sensor_voltage(),1);
+			string_move_to_new();			
+		}
 		string_add_string("\r"); //Символ означает, что строка закончилась
 		uart_send_string(1,string_buffer);
 		_mode++;
-		if (_mode>1) _mode=0;
+		if (_mode>2) _mode=0;
 	}
 	index++;
 	if (index > _duration) index=0;

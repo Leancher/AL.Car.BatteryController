@@ -121,9 +121,11 @@ void set_current_state()
 	}
 	else
 	{
-		show_all_data_on_display(20);
+		show_all_data_on_display(12);
 	}
 }
+
+
 
 int main(void)
 {

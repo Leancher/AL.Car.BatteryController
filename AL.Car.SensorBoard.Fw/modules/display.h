@@ -11,6 +11,7 @@
 
 void show_data_on_display(char *data);
 void show_voltage_on_display(int _duration);
+void show_p_sensor_on_display(int _duration);
 void show_temperature_on_display(int _duration);
 void show_humidity_on_display(int _duration);
 void show_all_data_on_display(int _duration);
