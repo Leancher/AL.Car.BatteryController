@@ -64,42 +64,68 @@ void show_humidity_on_display(int _duration)
 	var_delay_ms (_duration);
 }
 
+// void show_all_data_on_display(int _duration)
+// {
+// 	static int _mode=0;
+// 	static int index=0;
+// 	if (index==0)
+// 	{
+// 		string_clear(); //Передает битовый ноль, которые не кодирует символы
+// 		dht22_read(&_climate_temperature_0,&_climate_humidity_0);
+// 		if (_mode==0)
+// 		{
+// 			string_add_string("V = ");
+// 			string_add_float(get_battery_voltage(),2);
+// 			string_move_to_new();
+// 			string_add_string("Tout = ");
+// 			string_add_float(ds18b20_get_temperature_float(),1);
+// 			string_move_to_new();
+// 		}
+// 		if (_mode==1)
+// 		{
+// 			string_add_string("Tin = ");
+// 			string_add_float(_climate_temperature_0,1);
+// 			string_move_to_new();
+// 			string_add_string("Hin = ");
+// 			string_add_float(_climate_humidity_0,1);
+// 			string_move_to_new();
+// 		}
+// 		if (_mode==2)
+// 		{
+// 			string_add_string("Photosensor = ");
+// 			string_add_float(get_photo_sensor_voltage(),1);
+// 			string_move_to_new();			
+// 		}
+// 		string_add_string("\r"); //Символ означает, что строка закончилась
+// 		uart_send_string(1,string_buffer);
+// 		_mode++;
+// 		if (_mode>2) _mode=0;
+// 	}
+// 	index++;
+// 	if (index > _duration) index=0;
+// }
+
 void show_all_data_on_display(int _duration)
 {
-	static int _mode=0;
 	static int index=0;
 	if (index==0)
 	{
 		string_clear(); //Передает битовый ноль, которые не кодирует символы
 		dht22_read(&_climate_temperature_0,&_climate_humidity_0);
-		if (_mode==0)
-		{
-			string_add_string("V = ");
-			string_add_float(get_battery_voltage(),2);
-			string_move_to_new();
-			string_add_string("Tout = ");
-			string_add_float(ds18b20_get_temperature_float(),1);
-			string_move_to_new();
-		}
-		if (_mode==1)
-		{
-			string_add_string("Tin = ");
-			string_add_float(_climate_temperature_0,1);
-			string_move_to_new();
-			string_add_string("Hin = ");
-			string_add_float(_climate_humidity_0,1);
-			string_move_to_new();
-		}
-		if (_mode==2)
-		{
-			string_add_string("Photosensor = ");
-			string_add_float(get_photo_sensor_voltage(),1);
-			string_move_to_new();			
-		}
-		string_add_string("\r"); //Символ означает, что строка закончилась
-		uart_send_string(1,string_buffer);
-		_mode++;
-		if (_mode>2) _mode=0;
+		string_add_string(" V   To Ti Hi PS");
+		string_move_to_new();
+		string_add_float(get_battery_voltage(),1);
+		string_add_string(" ");
+		string_add_float(ds18b20_get_temperature_float(),0);
+		string_add_string(" ");
+		string_add_float(_climate_temperature_0,0);
+		string_add_string(" ");
+		string_add_float(_climate_humidity_0,0);
+		string_add_string(" ");
+		string_add_int(get_photo_sensor_voltage());
+		string_move_to_new();
+ 		string_add_string("\r"); //Символ означает, что строка закончилась
+ 		uart_send_string(1,string_buffer);
 	}
 	index++;
 	if (index > _duration) index=0;

@@ -121,7 +121,7 @@ void set_current_state()
 	}
 	else
 	{
-		show_all_data_on_display(12);
+		show_all_data_on_display(30);
 	}
 }
 

@@ -13,5 +13,5 @@ float get_photo_sensor_voltage()
 {
 	adc_init(ADCH0, ADC_ADJUST_RIGHT, ADC_REFS_INTERNAL_1_1,  ADC_PRESCALER_32);
 	uint16_t val=adc_read_average(3);
-	return val;
+	return val / 10;
 }
