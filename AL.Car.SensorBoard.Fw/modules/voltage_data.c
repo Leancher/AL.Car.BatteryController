@@ -9,9 +9,9 @@ float get_battery_voltage()
 	return val*ADC_VOLT_MULTIPLIER_MV / 1000;
 }
 
-float get_photo_sensor_voltage()
+float get_photosensor_voltage()
 {
 	adc_init(ADCH0, ADC_ADJUST_RIGHT, ADC_REFS_INTERNAL_1_1,  ADC_PRESCALER_32);
 	uint16_t val=adc_read_average(3);
-	return val / 10;
+	return val;
 }

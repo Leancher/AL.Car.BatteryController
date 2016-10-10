@@ -12,7 +12,7 @@
 
 #define DEV_NAME "Car sensor board 1.0"
 
-#define DURATION_WORK 200
+#define DURATION_WORK 600
 
 #define VOLTAGE_ENGINE_RUNNING 13.5
 #define VOLTAGE_BATTERY_NORMAL_CHARGE 12.5

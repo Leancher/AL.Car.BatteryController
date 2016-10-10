@@ -15,5 +15,5 @@ void show_p_sensor_on_display(int _duration);
 void show_temperature_on_display(int _duration);
 void show_humidity_on_display(int _duration);
 void show_all_data_on_display(int _duration);
-
+int get_photosensor_data();
 #endif /* DISPALY_H_ */

@@ -21,7 +21,7 @@ void show_p_sensor_on_display(int _duration)
 	{
 		string_clear(); //Передает битовый ноль, которые не кодирует символы
 		string_add_string("Voltage p-sensor = ");
-		string_add_float(get_photo_sensor_voltage(),2);
+		string_add_float(get_photosensor_voltage(),2);
 		string_add_string("\r"); //Символ означает, что строка закончилась
 		uart_send_string(1,string_buffer);
 	}
@@ -105,6 +105,15 @@ void show_humidity_on_display(int _duration)
 // 	if (index > _duration) index=0;
 // }
 
+int get_photosensor_data()
+{
+	int data = get_photosensor_voltage();
+	data=data/10;
+	if (data>100) data=99;
+	if (data<1) data=1;
+	return data;
+}
+
 void show_all_data_on_display(int _duration)
 {
 	static int index=0;
@@ -122,7 +131,7 @@ void show_all_data_on_display(int _duration)
 		string_add_string(" ");
 		string_add_float(_climate_humidity_0,0);
 		string_add_string(" ");
-		string_add_int(get_photo_sensor_voltage());
+		string_add_int(get_photosensor_data());
 		string_move_to_new();
  		string_add_string("\r"); //Символ означает, что строка закончилась
  		uart_send_string(1,string_buffer);
