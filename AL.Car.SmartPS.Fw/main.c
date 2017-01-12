@@ -1,5 +1,5 @@
 /*
- * AL.Car.SensorBoard.Fw
+ * AL.Car.SmartPS.Fw
  *
  * Created: 28.07.2016 8:44:04
  * Author : Andrew
@@ -7,138 +7,75 @@
 
 #include <avr/io.h>
 #include "board/board.h"
-#include "modules/display.h"
-#include "modules/voltage_data.h"
 
-#define DEV_NAME "Car sensor board 1.0"
+#define DEV_NAME "SmartPS board 1.0"
+#define ADC_VOLT_MULTIPLIER_MV		(68+2.2)/2.2 * 1.1
+#define DELAY_BEFOR_CONNECT 100 //10 000 мс / 100 циклов
+
 
 #define DURATION_WORK 600
 
-#define VOLTAGE_ENGINE_RUNNING 13.5
+#define VOLTAGE_ENGINE_RUN 13000
 #define VOLTAGE_BATTERY_NORMAL_CHARGE 12.5
 #define VOLTAGE_BATTERY_LOW_CHARGE 11.8
 
-int _counter_work = 0;
-
-// void switch_state_heat_glass(byte _state)
-// {
-// 	if (_state==1)
-// 	{
-// 		relay_heat_glass_state(1);
-// 		indicator_heat_glass(1);
-// 		return;
-// 	}
-// 	if (_state==0)
-// 	{
-// 		relay_heat_glass_state(0);
-// 		indicator_heat_glass(0);
-// 	}
-// }
-// 
-// int get_state_heat_glass_button()
-// {
-// 	static int index=0;
-// 	if (index>5)
-// 	{
-// 		index=0;
-// 		if (button_heat_glass_is_pressed()==1) return 1;
-// 	}
-// 	index++;
-// 	return 2;
-// }
-
-// void set_state_heat_glass()
-// {
-// 	static int _counter_work = 0;
-// 
-// 	if (button_heat_glass_is_pressed()==1)
-// 	{
-// 		if (_state_heat==0)
-// 		{
-// 			_state_heat=1;
-// 			switch_state_heat_glass(1);
-// 		}
-// 		else
-// 		{
-// 			_state_heat=0;
-// 			switch_state_heat_glass(0);
-// 		}
-// 		_counter_work=0;
-// 	}
-// 	if (_state_heat==1) _counter_work++;
-// 	if (_counter_work>200)
-// 	{
-// 		_state_heat=0;
-// 		_counter_work=0;
-// 		switch_state_heat_glass(0);
-// 	}
-// }
-
-void set_current_state()
+typedef enum
 {
-	static int _low_power = 0;
-	char *_data_display="";
-	static char *_previouse_data_display="";
-	float _voltage_battery = 0;
-	_voltage_battery = get_battery_voltage();
-	
-	if (_voltage_battery > VOLTAGE_BATTERY_NORMAL_CHARGE) 
-	{
-		relay_power_supply_set(1);
-		_low_power=0;
-	}
-	
-	if (_voltage_battery > VOLTAGE_ENGINE_RUNNING) _counter_work=1;
+	BATTERY_DISCHARGE=1,
+	BATTERY_CHARGE=2,
+} DEVICE_STATE;
+DEVICE_STATE current_state = BATTERY_DISCHARGE;
 
-	_counter_work++;
-	
-	if (_counter_work>DURATION_WORK)
-	{
-		relay_power_supply_set(0);
-		_counter_work=0;
-	}
-	
-	if (_voltage_battery<VOLTAGE_BATTERY_LOW_CHARGE)
-	{
-		//Задержка для исключений временного изменения напряженя
-		_low_power++;
-		if (_low_power>5)
-		{
-			_data_display = "Battery low charge";
-			relay_power_supply_set(0);
-			_counter_work=0;			
-		}
-	}	
-	if (button_power_supply_is_pressed()==1) relay_power_supply_set(0);
-	
-	if (button_car_alarm_is_pressed()==1) relay_power_supply_set(0);
+int counter = 0;
 
-	if (_data_display != "")
-	{
-		if (_data_display == _previouse_data_display) return;
-		show_data_on_display(_data_display);
-		_previouse_data_display=_data_display;
-	}
-	else
-	{
-		show_all_data_on_display(30);
-	}
+int get_voltage()
+{
+	uint16_t val=0;
+	val=adc_read_average(10);
+	val=val*ADC_VOLT_MULTIPLIER_MV;
+	return val;
 }
 
-
+void device_init()
+{
+	relay_add_battery(0);
+	button_power_supply_enable();
+	button_car_alarm_enable();	
+}
 
 int main(void)
 {
-	uart_init_withdivider(1,UBRR_VALUE);
-	show_data_on_display("\r\r\r");
-	show_data_on_display(DEV_NAME);
+	wdt_enable(WDTO_8S);
+	//uart_init_withdivider(1,UBRR_VALUE);
+		
+	adc_init_voltage_acc();
+	led_yellow_set(1);
 	
-	button_power_supply_enable();
-	button_car_alarm_enable();
-
     while (1) 
     {
-		set_current_state();
+		wdt_reset();
+		if (get_voltage()>VOLTAGE_ENGINE_RUN)
+		{
+			if (current_state==BATTERY_DISCHARGE)
+			{
+				counter++;
+				if (counter>DELAY_BEFOR_CONNECT)
+				{
+					current_state=BATTERY_CHARGE;
+					relay_add_battery(1);
+					led_green_set(1);
+					counter=0;
+				}			
+			}
+
+		}
+		else
+		{
+			current_state=BATTERY_DISCHARGE;
+			relay_add_battery(0);
+			led_green_set(0);
+			counter=0;
+		}
 		_delay_ms(100);
     }
 }

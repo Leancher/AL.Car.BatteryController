@@ -191,38 +191,13 @@
     <Compile Include="libs\bwl_uart.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="libs\dht22.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="libs\dht22.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="libs\ds18b20_avr.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="libs\ds18b20_avr.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="modules\display.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="modules\display.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="modules\voltage_data.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="modules\voltage_data.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="board" />
     <Folder Include="libs" />
-    <Folder Include="modules" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

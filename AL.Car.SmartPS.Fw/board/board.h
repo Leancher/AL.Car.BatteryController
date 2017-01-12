@@ -4,8 +4,6 @@
 #define F_CPU 8000000UL
 #define BAUD 9600
 
-#define UART_DISPLAY 1
-
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/wdt.h>
@@ -17,18 +15,28 @@
 #define getbit(port, bit)		((port) &   (1 << (bit)))
 #define setbit(port,bit,val)	{if ((val)) {(port)|= (1 << (bit));} else {(port) &= ~(1 << (bit));}}
 
+//User Libraries
+#include "../libs/bwl_uart.h"
+#include "../libs/bwl_adc.h"
+
 typedef unsigned char byte;
 
 void var_delay_ms(int ms);
+
+void adc_init_voltage_input();
+void adc_init_voltage_acc();
+
 void button_power_supply_enable();
 byte button_power_supply_is_pressed();
-void relay_power_supply_set(byte _state);
+void relay_power_supply_set(byte state);
+void relay_add_battery(byte state);
+
+void led_red_set(byte state);
+void led_yellow_set(byte state);
+void led_green_set(byte state);
+
 void alarm_activate_in_enable();
 byte alarm_activate_in_is_pressed();
-void button_heat_glass_enable();
-byte button_heat_glass_is_pressed();
-void relay_heat_glass_state(byte state);
-void indicator_heat_glass (byte state);
 
 void button_car_alarm_enable();
 byte button_car_alarm_is_pressed();
