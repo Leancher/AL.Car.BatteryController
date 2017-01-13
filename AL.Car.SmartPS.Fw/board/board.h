@@ -24,12 +24,12 @@ typedef unsigned char byte;
 void var_delay_ms(int ms);
 
 void adc_init_voltage_input();
-void adc_init_voltage_acc();
+void adc_init_voltage_battery();
 
 void button_power_supply_enable();
 byte button_power_supply_is_pressed();
 void relay_power_supply_set(byte state);
-void relay_add_battery(byte state);
+void relay_charge_battery(byte state);
 
 void led_red_set(byte state);
 void led_yellow_set(byte state);

@@ -10,7 +10,7 @@ void adc_init_voltage_input()
 	adc_init(1, ADC_ADJUST_RIGHT, ADC_REFS_INTERNAL_1_1,  ADC_PRESCALER_32);
 }
 
-void adc_init_voltage_acc()
+void adc_init_voltage_battery()
 {
 	adc_init(0, ADC_ADJUST_RIGHT, ADC_REFS_INTERNAL_1_1,  ADC_PRESCALER_32);
 }
@@ -59,7 +59,7 @@ void led_green_set(byte state)
 	setbit(PORTB,5,state);
 }
 
-void relay_add_battery(byte state)
+void relay_charge_battery(byte state)
 {
 	setbit(DDRD,4,1);
 	setbit(PORTD,4,state);	

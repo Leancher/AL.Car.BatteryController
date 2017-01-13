@@ -8,37 +8,45 @@
 #include <avr/io.h>
 #include "board/board.h"
 
-#define DEV_NAME "SmartPS board 1.0"
+#define DEV_NAME "PS board 1.0"
 #define ADC_VOLT_MULTIPLIER_MV		(68+2.2)/2.2 * 1.1
 #define DELAY_BEFOR_CONNECT 100 //10 000 мс / 100 циклов
 
-
-#define DURATION_WORK 600
-
-#define VOLTAGE_ENGINE_RUN 13000
-#define VOLTAGE_BATTERY_NORMAL_CHARGE 12.5
-#define VOLTAGE_BATTERY_LOW_CHARGE 11.8
+#define VOLTAGE_INPUT_ENGINE_RUN 13000
+#define VOLTAGE_INPUT_NORMAL 12500
+#define VOLTAGE_BATTERY_DISCHARGEON 12500
+#define VOLTAGE_BATTERY_DISCHARGEOFF 11800
 
 typedef enum
 {
-	BATTERY_DISCHARGE=1,
-	BATTERY_CHARGE=2,
+	BATTERY_DISCHARGED=1,
+	BATTERY_CHARGED=2,
+	BATTERY_CHARGING=3,
+	BATTERY_DISCHARGING=4,
 } DEVICE_STATE;
-DEVICE_STATE current_state = BATTERY_DISCHARGE;
+DEVICE_STATE current_state = BATTERY_DISCHARGED;
 
 int counter = 0;
 
-int get_voltage()
+int get_voltage_input()
 {
-	uint16_t val=0;
-	val=adc_read_average(10);
-	val=val*ADC_VOLT_MULTIPLIER_MV;
+	adc_init_voltage_input();
+	int val=0;
+	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV;
+	return val;
+}
+
+int get_voltage_battery()
+{
+	adc_init_voltage_battery();
+	int val=0;
+	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV;
 	return val;
 }
 
 void device_init()
 {
-	relay_add_battery(0);
+	relay_charge_battery(0);
 	button_power_supply_enable();
 	button_car_alarm_enable();	
 }
@@ -46,35 +54,52 @@ void device_init()
 int main(void)
 {
 	wdt_enable(WDTO_8S);
-	//uart_init_withdivider(1,UBRR_VALUE);
-		
-	adc_init_voltage_acc();
+	
 	led_yellow_set(1);
 	
     while (1) 
     {
 		wdt_reset();
-		if (get_voltage()>VOLTAGE_ENGINE_RUN)
-		{
-			if (current_state==BATTERY_DISCHARGE)
-			{
-				counter++;
-				if (counter>DELAY_BEFOR_CONNECT)
-				{
-					current_state=BATTERY_CHARGE;
-					relay_add_battery(1);
-					led_green_set(1);
-					counter=0;
-				}			
-			}
 
-		}
-		else
+		if (get_voltage_input()<VOLTAGE_INPUT_NORMAL)
 		{
-			current_state=BATTERY_DISCHARGE;
-			relay_add_battery(0);
+			relay_charge_battery(0);
 			led_green_set(0);
-			counter=0;
+			led_yellow_set(0);
+			led_red_set(0);
+			if (get_voltage_battery()<VOLTAGE_BATTERY_DISCHARGEOFF)
+			{
+				relay_power_supply_set(0);
+			}
+		}
+
+		if (get_voltage_input()>VOLTAGE_INPUT_NORMAL)
+		{
+			if (get_voltage_battery()<VOLTAGE_BATTERY_DISCHARGEOFF)
+			{
+				led_green_set(0);
+				led_yellow_set(0);				
+				led_red_set(1);
+			}
+		}
+
+		if (get_voltage_input()>VOLTAGE_INPUT_ENGINE_RUN)
+		{
+			relay_power_supply_set(1);
+			if (get_voltage_battery()<VOLTAGE_BATTERY_DISCHARGEON)
+			{
+				relay_charge_battery(1);
+				led_green_set(0);
+				led_yellow_set(1);
+				led_red_set(0);
+			}
+		}
+		if (get_voltage_battery()>VOLTAGE_BATTERY_DISCHARGEON)
+		{
+			relay_charge_battery(0);
+			led_yellow_set(0);
+			led_green_set(1);
+			led_red_set(0);
 		}
 		_delay_ms(100);
     }
