@@ -38,6 +38,7 @@ int get_voltage_battery()
 
 void device_init()
 {
+	uart_init_withdivider(0,UBRR_VALUE);
 	relay_charge_battery(0);
 	button_power_supply_enable();
 	button_car_alarm_enable();	
@@ -53,6 +54,9 @@ int main(void)
 		
 		voltage_input=get_voltage_input();
 		voltage_battery=get_voltage_battery();
+		
+		uart_send_int(0,voltage_battery);
+		uart_send_string(0,"\r\n");
 		
 		//Двигатель заведен
 		if (voltage_input>VOLTAGE_INPUT_ENGINE_RUN)
@@ -118,6 +122,6 @@ int main(void)
 			relay_power_supply_set(0);
 			}
 		}
-		_delay_ms(100);
+		_delay_ms(1000);
     }
 }

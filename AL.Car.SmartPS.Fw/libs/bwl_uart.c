@@ -1,17 +1,18 @@
 /*
- * Bwl UART lib for AVR: mega48/88/168/328
+ * Bwl UART lib for AVR: mega48/88/168/328/324/164/2560/1280
  *
  * Author: Igor Koshelev and others
  * Licensed: open-source Apache license
  *
- * Version: 29.07.2015
+ * Version: 01.07.2016
  */ 
 
 #include <avr/io.h>
+#include <stdlib.h>
 
 #include "bwl_uart.h"
 
-char uart_send_buffer[32]={};
+char uart_send_buffer[16]={};
 
 void uart_init_withdivider(unsigned char port, unsigned int ubrr)
 {
@@ -95,8 +96,9 @@ void uart_send_int(unsigned char port,int val)
 
 void uart_send_float(unsigned char port,float val, char precision)
 {
-	dtostrf(val,1,precision,uart_send_buffer);
-	uart_send_string(port,uart_send_buffer);
+	char* buffer="1234567890";
+	dtostrf(val,1,precision,buffer);
+	uart_send_string(port,buffer);
 }
 
 void uart_send_line(unsigned char port,char *string)
