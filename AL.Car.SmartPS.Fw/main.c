@@ -5,6 +5,9 @@
  * Author : Andrew
  */ 
 
+
+ //вюярнрю 16 лЦЖ, ме асдер опньхбюрэяъ вепег нркюдйс
+ //---------------------------------------------------
 #include <avr/io.h>
 #include "board/board.h"
 
@@ -13,9 +16,9 @@
 #define DIODE_CORRECTION 200
 
 #define VOLTAGE_INPUT_ENGINE_RUN 13000
-#define VOLTAGE_INPUT_NORMAL 12000
+#define VOLTAGE_INPUT_NORMAL 11000
 #define VOLTAGE_BATTERY_DISCHARGEON 12500
-#define VOLTAGE_BATTERY_DISCHARGEOFF 10000
+#define VOLTAGE_BATTERY_DISCHARGEOFF 8000
 
 int voltage_input=0;
 int voltage_battery=0;
@@ -24,7 +27,7 @@ int get_voltage_input()
 {
 	adc_init_voltage_input();
 	int val=0;
-	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV+DIODE_CORRECTION;
+	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV;//+DIODE_CORRECTION;
 	return val;
 }
 
@@ -32,13 +35,13 @@ int get_voltage_battery()
 {
 	adc_init_voltage_battery();
 	int val=0;
-	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV+DIODE_CORRECTION;
+	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV;//+DIODE_CORRECTION;
 	return val;
 }
 
 void device_init()
 {
-	uart_init_withdivider(0,UBRR_VALUE);
+	//uart_init_withdivider(0,UBRR_VALUE);
 	relay_charge_battery(0);
 	button_power_supply_enable();
 	button_car_alarm_enable();	
@@ -55,8 +58,8 @@ int main(void)
 		voltage_input=get_voltage_input();
 		voltage_battery=get_voltage_battery();
 		
-		uart_send_int(0,voltage_battery);
-		uart_send_string(0,"\r\n");
+		//uart_send_int(0,voltage_battery);
+		//uart_send_string(0,"\r\n");
 		
 		//дБХЦЮРЕКЭ ГЮБЕДЕМ
 		if (voltage_input>VOLTAGE_INPUT_ENGINE_RUN)

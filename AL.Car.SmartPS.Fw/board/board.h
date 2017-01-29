@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#define F_CPU 8000000UL
+#define F_CPU 16000UL
 #define BAUD 9600
 
 #include <avr/io.h>
@@ -10,13 +10,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <util/setbaud.h>
+//#include <util/setbaud.h>
 
 #define getbit(port, bit)		((port) &   (1 << (bit)))
 #define setbit(port,bit,val)	{if ((val)) {(port)|= (1 << (bit));} else {(port) &= ~(1 << (bit));}}
 
 //User Libraries
-#include "../libs/bwl_uart.h"
+//#include "../libs/bwl_uart.h"
 #include "../libs/bwl_adc.h"
 
 typedef unsigned char byte;
