@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#define F_CPU 16000UL
+#define F_CPU 1000000UL
 #define BAUD 9600
 
 #include <avr/io.h>
