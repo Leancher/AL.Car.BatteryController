@@ -17,9 +17,9 @@
 
 #define VOLTAGE_INPUT_ENGINE_RUN 13000
 #define VOLTAGE_INPUT_NORMAL 11000
-#define VOLTAGE_CHARGE_ON 11500
-#define VOLTAGE_CHARGE_OFF 12000
-#define VOLTAGE_BATTERY_DISCHARGEOFF 8000
+#define VOLTAGE_CHARGE_ON 11000
+#define VOLTAGE_CHARGE_OFF 12200
+#define VOLTAGE_BATTERY_DISCHARGEOFF 7000
 
 int voltage_input=0;
 int voltage_battery=0;
@@ -29,7 +29,7 @@ int get_voltage_input()
 	adc_init_voltage_input();
 	_delay_ms(1);
 	int val=0;
-	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV+DIODE_CORRECTION;
+	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV;//+DIODE_CORRECTION;
 	return val;
 }
 
@@ -38,7 +38,7 @@ int get_voltage_battery()
 	adc_init_voltage_battery();
 	_delay_ms(1);
 	int val=0;
-	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV+DIODE_CORRECTION;
+	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV;//+DIODE_CORRECTION;
 	return val;
 }
 
@@ -66,7 +66,6 @@ int main(void)
 		//Двигатель заведен
 		if (voltage_input>VOLTAGE_INPUT_ENGINE_RUN)
 		{
-			
 			relay_power_supply_set(1);
 			voltage_battery=get_voltage_battery();
 			//Батарея разряжена, включаем заряд
@@ -113,7 +112,6 @@ int main(void)
 					led_red_set(0);				
 				}				
 			}
-
 		}
 		//Зажигание выключено
 		if (voltage_input<VOLTAGE_INPUT_NORMAL)
