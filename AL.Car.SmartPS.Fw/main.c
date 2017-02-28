@@ -17,12 +17,14 @@
 
 #define VOLTAGE_INPUT_ENGINE_RUN 13000
 #define VOLTAGE_INPUT_NORMAL 11000
-#define VOLTAGE_CHARGE_ON 11000
-#define VOLTAGE_CHARGE_OFF 12200
+#define VOLTAGE_CHARGE_ON 11500
+#define VOLTAGE_CHARGE_OFF 12800
 #define VOLTAGE_BATTERY_DISCHARGEOFF 7000
 
 int voltage_input=0;
 int voltage_battery=0;
+
+int current_state=0;
 
 int get_voltage_input()
 {
@@ -68,6 +70,17 @@ int main(void)
 		{
 			relay_power_supply_set(1);
 			voltage_battery=get_voltage_battery();
+			if (current_state==0)
+			{
+				if (voltage_battery<VOLTAGE_CHARGE_OFF)
+				{
+					relay_charge_battery(1);
+					led_green_set(0);
+					led_yellow_set(0);
+					led_red_set(1);
+				}
+				current_state=1;
+			}
 			//Батарея разряжена, включаем заряд
 			if (voltage_battery<VOLTAGE_CHARGE_ON)
 			{
@@ -110,7 +123,8 @@ int main(void)
 					led_green_set(0);
 					led_yellow_set(1);
 					led_red_set(0);				
-				}				
+				}
+				current_state=0;		
 			}
 		}
 		//Зажигание выключено
@@ -124,8 +138,9 @@ int main(void)
 			//Батарея сильно разряжена, все выключаем
 			if (voltage_battery<VOLTAGE_BATTERY_DISCHARGEOFF)
 			{
-			relay_power_supply_set(0);
+				relay_power_supply_set(0);
 			}
+			current_state=0;
 		}
 		_delay_ms(1000);
     }
