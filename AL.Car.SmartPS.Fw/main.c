@@ -15,10 +15,10 @@
 #define ADC_VOLT_MULTIPLIER_MV		(68+2.2)/2.2 * 1.1
 #define DIODE_CORRECTION 200
 
-#define VOLTAGE_INPUT_ENGINE_RUN 13000
+#define VOLTAGE_INPUT_ENGINE_RUN 12500
 #define VOLTAGE_INPUT_NORMAL 11000
 #define VOLTAGE_CHARGE_ON 11500
-#define VOLTAGE_CHARGE_OFF 12800
+#define VOLTAGE_CHARGE_OFF 13000
 #define VOLTAGE_BATTERY_DISCHARGEOFF 7000
 
 int voltage_input=0;
@@ -51,6 +51,7 @@ void device_init()
 	button_power_supply_enable();
 	button_car_alarm_enable();	
 	led_yellow_set(1);
+	relay_power_supply_set(1);
 }
 
 int main(void)
