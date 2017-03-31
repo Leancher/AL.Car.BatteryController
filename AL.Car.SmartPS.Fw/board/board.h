@@ -1,7 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#define F_CPU 1000000UL
+#define F_CPU 4000000UL
 #define BAUD 9600
 
 #include <avr/io.h>
@@ -23,22 +23,18 @@ typedef unsigned char byte;
 
 void var_delay_ms(int ms);
 
-void adc_init_voltage_input();
+void adc_init_voltage_acc();
 void adc_init_voltage_battery();
-
-void button_power_supply_enable();
-byte button_power_supply_is_pressed();
-void relay_power_supply_set(byte state);
-void relay_charge_battery(byte state);
+void adc_init_voltage_power_in();
+void adc_init_voltage_generator();
 
 void led_red_set(byte state);
 void led_yellow_set(byte state);
 void led_green_set(byte state);
 
-void alarm_activate_in_enable();
-byte alarm_activate_in_is_pressed();
-
-void button_car_alarm_enable();
-byte button_car_alarm_is_pressed();
+void relay_battery_charge(byte state);
+void relay_battery_power(byte state);
+void relay_power_add_device(byte state);
+void relay_usb(byte state);
 
 #endif /* BOARD_H_ */
