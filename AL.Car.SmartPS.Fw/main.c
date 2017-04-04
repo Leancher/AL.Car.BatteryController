@@ -12,7 +12,7 @@
 #include "board/board.h"
 
 #define DEV_NAME "PS board 1.0"
-#define ADC_VOLT_MULTIPLIER_MV		(68+2.2)/2.2 * 1.1
+#define ADC_VOLT_MULTIPLIER_MV		(68+2)/2 * 1.1
 #define DIODE_CORRECTION 200
 
 #define VOLTAGE_ENGINE_RUN 12500
@@ -121,7 +121,7 @@ int main(void)
 		{
 			//Отключаем заряд
 			relay_battery_charge(0);
-			led_green_set(0);
+			led_green_set(1);
 			led_yellow_set(0);
 			led_red_set(0);
 			//Батарея сильно разряжена, все выключаем
