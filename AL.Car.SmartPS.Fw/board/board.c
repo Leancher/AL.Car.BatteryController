@@ -43,6 +43,7 @@ void led_green_set(byte state)
 	setbit(PORTB,3,state);
 }
 
+//0 - вкл, 1 - выкл
 void relay_battery_charge(byte state)
 {
 	setbit(DDRB,4,1);
