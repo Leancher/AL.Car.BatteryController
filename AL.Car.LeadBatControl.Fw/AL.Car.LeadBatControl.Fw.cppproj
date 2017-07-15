@@ -13,7 +13,7 @@
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AssemblyName>AL.Car.SensorBoard.Fw</AssemblyName>
-    <Name>AL.Car.SmartPS.Fw</Name>
+    <Name>AL.Car.LeadBatControl.Fw</Name>
     <RootNamespace>AL.Car.SensorBoard.Fw</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
