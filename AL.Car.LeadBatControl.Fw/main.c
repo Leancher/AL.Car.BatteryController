@@ -1,5 +1,5 @@
 /*
- * AL.Car.SmartPS.Fw
+ * AL.Car.LeadBatControl.Fw
  *
  * Created: 28.07.2016 8:44:04
  * Author : Andrew
@@ -17,9 +17,9 @@
 
 #define VOLTAGE_ENGINE_RUN 12500
 #define VOLTAGE_INPUT_NORMAL 11000
-#define VOLTAGE_CHARGE_ON 6000
+#define VOLTAGE_CHARGE_ON 7200
 #define VOLTAGE_CHARGE_OFF 7500
-#define VOLTAGE_BATTERY_DISCHARGEOFF 5000
+#define VOLTAGE_BATTERY_DISCHARGEOFF 5500
 
 int voltage_generator=0;
 int voltage_battery=0;
