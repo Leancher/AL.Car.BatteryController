@@ -6,20 +6,21 @@
  */ 
 
 
- //вюярнрю 16 лЦЖ, ме асдер опньхбюрэяъ вепег нркюдйс
+ //вюярнрю 16 йЦЖ, ме асдер опньхбюрэяъ вепег нркюдйс
  //---------------------------------------------------
 #include <avr/io.h>
 #include "board/board.h"
 
 #define DEV_NAME "PS board 1.0"
-#define ADC_VOLT_MULTIPLIER_MV		(68+2)/2 * 1.1
+#define ADC_VOLT_MULTIPLIER_MV		(68+2)/2 * 1.1 //38.1
 #define DIODE_CORRECTION 350
+#define ERROR 150
 
 #define VOLTAGE_ENGINE_RUN 12500
 #define VOLTAGE_INPUT_NORMAL 11000
 #define VOLTAGE_CHARGE_ON 7200
-#define VOLTAGE_CHARGE_OFF 7500
-#define VOLTAGE_BATTERY_DISCHARGEOFF 5500
+#define VOLTAGE_CHARGE_OFF 7400
+#define VOLTAGE_BATTERY_DISCHARGEOFF 5200
 
 int voltage_generator=0;
 int voltage_battery=0;
@@ -27,10 +28,36 @@ int voltage_acc=0;
 
 int current_state=0;
 
-int get_voltage()
+int get_voltage_generator()
 {
 	int val=0;
-	val=adc_read_average(3)*ADC_VOLT_MULTIPLIER_MV + DIODE_CORRECTION;
+	adc_init_voltage_generator();
+	val=adc_read_average(10);
+	val=val*(67.9+1.99)/2*1.1 - 150;
+	//val=val*ADC_VOLT_MULTIPLIER_MV - ERROR;
+	adc_off();
+	return val;
+}
+
+int get_voltage_battery()
+{
+	int val=0;
+	adc_init_voltage_battery();
+	val=adc_read_average(10);
+	val=val*(68.1+1.99)/2*1.1 - 150;
+	//val=val*ADC_VOLT_MULTIPLIER_MV - ERROR;
+	adc_off();
+	return val;
+}
+
+int get_voltage_acc()
+{
+	int val=0;
+	adc_init_voltage_acc();
+	val=adc_read_average(10);
+	val=val*(68.1+1.99)/2*1.1 - 150;
+	//val=val*ADC_VOLT_MULTIPLIER_MV - ERROR;
+	adc_off();
 	return val;
 }
 
@@ -50,13 +77,10 @@ int main(void)
     while (1) 
     {
 		wdt_reset();
-		adc_init_voltage_generator();
-		voltage_generator=get_voltage();
-		adc_init_voltage_battery();
-		voltage_battery=get_voltage();
-		adc_init_voltage_acc();
-		voltage_acc=get_voltage();
-		
+		voltage_generator=get_voltage_generator();
+		voltage_battery=get_voltage_battery();
+		voltage_acc=get_voltage_acc();
+		adc_off();
 		//дБХЦЮРЕКЭ ГЮБЕДЕМ
 		if (voltage_generator>VOLTAGE_ENGINE_RUN)
 		{
